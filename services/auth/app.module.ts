@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { enviroment } from 'config/enviroment';
+import { enviroment } from 'core/config/enviroment';
 import { UserModule } from 'infrestructure/nestjs/user.module';
 
 
@@ -12,7 +12,7 @@ import { UserModule } from 'infrestructure/nestjs/user.module';
       username: enviroment.USERNAME_DATABASE,
       password: enviroment.PASSWORD_DATABASE,
       database: enviroment.NAME_DATABASE,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [__dirname + '/**/*.model{.ts,.js}'],
       synchronize: true,
       port: enviroment.PORT_DATABASE
     }),

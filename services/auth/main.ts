@@ -6,10 +6,20 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({transform: true}));
   await app.listen(process.env.PORT ?? 3000);
-
+ 
 }
 
 bootstrap();
 
+/* 
 
-// docker run --name mysql-db -e MYSQL_ROOT_PASSWORD=kirito -e MYSQL_USER=root -e MYSQL_PASSWORD=root -p 3306:3306 -d mysql
+"Para crear un contenedor de docker"
+
+docker run --name mysql-db   -e MYSQL_ROOT_PASSWORD=kirito  -p 3306:3306 -v mysql_data:/var/lib/mysql -d mysql
+
+
+*/
+
+// docker exec -it mysql-db mysql -u root -p
+// # contraseña: kirito
+ 

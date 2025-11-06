@@ -1,10 +1,11 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import EncryptServiceRepository from "application/service/encryptServiceRepository";
 import { hash, compare } from "bcrypt"
-import { enviroment } from "config/enviroment";
+import { enviroment } from "core/config/enviroment";
 
 @Injectable()
 export default class EncryptService implements EncryptServiceRepository {
+          private readonly logger = new Logger(EncryptService.name);
         async compare(hashed_password: string, plain_password: string): Promise<boolean> {
                 
                 try {
@@ -16,7 +17,7 @@ export default class EncryptService implements EncryptServiceRepository {
         }
 
         async hash(password: string): Promise<string> {
-                try {
+                try {   
                         const passwordHash = await hash(password, enviroment.SALT_ROUNDS);
                         return passwordHash;
                 } catch (error) {

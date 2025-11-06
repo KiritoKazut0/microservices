@@ -1,6 +1,7 @@
 import { Body, Controller, Inject, Post } from "@nestjs/common";
 import AccessUseCase from "application/accessUseCase";
 import RegisterUseCase from "application/registerUseCase";
+import { ACCESS_USE_CASE, REGISTER_USE_CASE } from "core/tokens/injection-tokens";
 import AccessDto from "infrestructure/dtos/access-dto";
 import RegisterDto from "infrestructure/dtos/register-dto";
 
@@ -9,8 +10,8 @@ import RegisterDto from "infrestructure/dtos/register-dto";
 export class UserController {
 
     constructor(
-        @Inject('AccessUseCase') private readonly accessUseCase: AccessUseCase,
-        @Inject('RegisterUseCase') private readonly registerUseCase: RegisterUseCase
+        @Inject(ACCESS_USE_CASE) private readonly accessUseCase: AccessUseCase,
+        @Inject(REGISTER_USE_CASE) private readonly registerUseCase: RegisterUseCase
     ) { }
 
     @Post('/access')

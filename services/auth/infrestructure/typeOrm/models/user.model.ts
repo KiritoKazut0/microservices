@@ -12,7 +12,7 @@ export class UserModel {
     @Column({type: 'varchar', length: 50, nullable: false, unique: true})
     email: string;
 
-    @Column({type: 'varchar', length: 30, nullable: false})
+    @Column({type: 'varchar', length: 255, nullable: false})
     password: string;
 
 }

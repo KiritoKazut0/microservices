@@ -12,13 +12,6 @@ export default class TokenService implements TokenServiceRepository {
 
     generateToken(idUser: string): string {
         const payload = { sub: idUser };
-        
-        return this.jwtService.sign(payload,
-            {
-                secret: process.env['JWT_SECRET'] ?? "DEFAULT_SECRET",
-                expiresIn: 60 * 60, 
-                algorithm: 'HS256',
-            }
-        );
+        return this.jwtService.sign(payload);
     }
 }

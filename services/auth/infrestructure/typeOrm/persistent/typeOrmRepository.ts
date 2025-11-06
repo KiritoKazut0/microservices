@@ -1,12 +1,13 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import User from "domain/user";
 import UserRepository from "domain/userRepository";
-import { UserModel } from "../models/userModel";
+import { UserModel } from "../models/user.model";
 import { Repository, QueryFailedError } from "typeorm";
-import { ConflictException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { ConflictException, InternalServerErrorException, NotFoundException, Logger } from "@nestjs/common";
+
 
 export default class TypeOrmRepository implements UserRepository {
-
+  private readonly logger = new Logger(TypeOrmRepository.name);
     constructor(
         @InjectRepository(UserModel)
         private readonly repository: Repository<UserModel>
@@ -14,11 +15,15 @@ export default class TypeOrmRepository implements UserRepository {
 
 
    async access(email: string, password: string): Promise<User | null> {
-        const user = await this.findByEmail(email);
+       try {
+         const user = await this.findByEmail(email);
         if (!user) {
             throw new NotFoundException("User not found");
         }
         return user;
+       } catch (error) {
+            throw error;
+       }
     }
 
 
@@ -37,7 +42,10 @@ export default class TypeOrmRepository implements UserRepository {
 
         } catch (error) {
             if (error instanceof QueryFailedError) {
+               this.logger.error(error)
                 throw new InternalServerErrorException("A database error ocurred while create for user")
+            } else if(error instanceof ConflictException){
+                throw error;
             }
             throw new InternalServerErrorException('A database error occurred during user registration.');
         }
@@ -49,7 +57,10 @@ export default class TypeOrmRepository implements UserRepository {
             const user = await this.repository.findOneBy({ email });
             return user;
         } catch (error) {
+             this.logger.error(error)
             if (error instanceof QueryFailedError) {
+                
+                
                 throw new InternalServerErrorException('A database error occurred while searching for the email.');
             }
             throw new InternalServerErrorException('An unexpected error occurred accessing the database.');

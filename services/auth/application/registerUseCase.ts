@@ -11,8 +11,8 @@ export default class RegisterUseCase {
     ) { }
 
     async run(user: Omit<User, "id">): Promise<{ user: User, token: string } | null> {
-
-        const passwordHash = await this.encryptService.hash(user.password)
+        
+        const passwordHash = await this.encryptService.hash(user.password);
         const newUser = await this.repository.register({
             name: user.name,
             email: user.email,

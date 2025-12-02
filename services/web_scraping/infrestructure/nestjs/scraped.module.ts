@@ -1,33 +1,83 @@
 import { Module } from "@nestjs/common";
-import { ScrapedController } from "./Scraped.controller";
-import { FIND_BY_ID_USECASE, FIND_BY_SOURCE_ULR_USECASE, SCRAPED_REPOSITORY } from "core/injection-token";
+import { ScrapedController } from "./scraped.controller";
+import chromium from "chromium";
+import {
+  FIND_BY_ID_USECASE,
+  FIND_BY_SOURCE_ULR_USECASE,
+  SCRAPED_SERVICE,
+  SAVE_SCRAPED_CONTENT_USECASE,
+  SCRAPED_REPOSITORY
+} from "core/injection-token";
+
 import { FirestoreScrapingRepository } from "infrestructure/cloud_firestore/firestore-scraping.repository";
+import { PuppeteerScrappedService } from "infrestructure/service/puppeteerScrapedServiceImp";
 import { FindByIdScrapedContentUseCase } from "application/findByIdScrapedContentUseCase";
 import { FindBySourceUrlUseCase } from "application/findBySourceUrlUseCase";
+import { SavedScrapendContentUseCase } from "application/saveScrapedContentUseCase";
 
+import { PuppeteerModule } from "nestjs-puppeteer";
+import * as admin from "firebase-admin";
+import { join } from "node:path";
+
+const serviceAccountPath = join(process.cwd(), "firebase-service-account.json");
 
 @Module({
-    imports: [],
-    controllers: [ScrapedController],
-    providers: [
-        {
-            provide: SCRAPED_REPOSITORY,
-            useClass: FirestoreScrapingRepository
-        },{
-            provide: FIND_BY_ID_USECASE,
-            useFactory: (
-                scrapedRepository
-            ) => 
-                new FindByIdScrapedContentUseCase(scrapedRepository),
-                inject: [SCRAPED_REPOSITORY]
-        },{
-            provide: FIND_BY_SOURCE_ULR_USECASE,
-            useFactory: (
-                scrapedRepository
-            ) => new FindBySourceUrlUseCase(scrapedRepository),
-                inject: [SCRAPED_REPOSITORY]
-        }, {
-          
+  imports: [
+    PuppeteerModule.forRoot({
+       headless: 'new',
+      executablePath: chromium.path, 
+      args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+    })
+  ],
+
+  controllers: [ScrapedController],
+
+  providers: [
+    // FIRESTORE
+    {
+      provide: "FIRESTORE",
+      useFactory: () => {
+        if (admin.apps.length === 0) {
+          admin.initializeApp({
+            credential: admin.credential.cert(serviceAccountPath)
+          });
         }
-    ]
+        return admin.firestore();
+      }
+    },
+
+    {
+      provide: SCRAPED_REPOSITORY,
+      useFactory: (firestore) =>
+        new FirestoreScrapingRepository(firestore, "scrapedContents"),
+      inject: ["FIRESTORE"]
+    },
+
+    // SCRAPING SERVICE
+    {
+      provide: SCRAPED_SERVICE,
+      useClass: PuppeteerScrappedService
+    },
+
+    // USE CASES
+    {
+      provide: FIND_BY_ID_USECASE,
+      useFactory: (repo) => new FindByIdScrapedContentUseCase(repo),
+      inject: [SCRAPED_REPOSITORY]
+    },
+
+    {
+      provide: FIND_BY_SOURCE_ULR_USECASE,
+      useFactory: (repo) => new FindBySourceUrlUseCase(repo),
+      inject: [SCRAPED_REPOSITORY]
+    },
+
+    {
+      provide: SAVE_SCRAPED_CONTENT_USECASE,
+      useFactory: (repo, service) =>
+        new SavedScrapendContentUseCase(repo, service),
+      inject: [SCRAPED_REPOSITORY, SCRAPED_SERVICE]
+    }
+  ]
 })
+export class ScrapedModule {}

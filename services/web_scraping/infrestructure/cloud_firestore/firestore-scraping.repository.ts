@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, InternalServerErrorException } from '@ne
 import { Firestore, CollectionReference } from 'firebase-admin/firestore';
 import { ScrapedContent } from 'domain/ScrapedContent';
 import { ScrapedRepository } from 'domain/ScrapedRepository';
+import { ScrapedContentMapper } from './scraped_content.mapper'; 
 
 @Injectable()
 export class FirestoreScrapingRepository implements ScrapedRepository {
@@ -15,6 +16,9 @@ export class FirestoreScrapingRepository implements ScrapedRepository {
     this.collectionRef = this.firestore.collection(this.collectionName);
   }
 
+  // -----------------------------------------------------
+  // FIND BY ID
+  // -----------------------------------------------------
   async findById(contentId: string): Promise<ScrapedContent> {
     try {
       const doc = await this.collectionRef.doc(contentId).get();
@@ -23,7 +27,7 @@ export class FirestoreScrapingRepository implements ScrapedRepository {
         throw new NotFoundException(`ScrapedContent with ID '${contentId}' not found`);
       }
 
-      return doc.data() as ScrapedContent;
+      return ScrapedContentMapper.toDomain(doc.data());
 
     } catch (err) {
       if (err instanceof NotFoundException) throw err;
@@ -31,6 +35,9 @@ export class FirestoreScrapingRepository implements ScrapedRepository {
     }
   }
 
+  // -----------------------------------------------------
+  // FIND BY URL
+  // -----------------------------------------------------
   async findBySourceUrl(url: string): Promise<ScrapedContent> {
     try {
       const snap = await this.collectionRef
@@ -42,7 +49,7 @@ export class FirestoreScrapingRepository implements ScrapedRepository {
         throw new NotFoundException(`ScrapedContent with URL '${url}' not found`);
       }
 
-      return snap.docs[0].data() as ScrapedContent;
+      return ScrapedContentMapper.toDomain(snap.docs[0].data());
 
     } catch (err) {
       if (err instanceof NotFoundException) throw err;
@@ -50,20 +57,27 @@ export class FirestoreScrapingRepository implements ScrapedRepository {
     }
   }
 
-  async save(content: Omit<ScrapedContent, 'id'>): Promise<ScrapedContent> {
+  // -----------------------------------------------------
+  // SAVE — GENERA ID AUTOMÁTICAMENTE
+  // -----------------------------------------------------
+  async save(entity: ScrapedContent): Promise<ScrapedContent> {
     try {
-      const doc = this.collectionRef.doc();
 
-      const newData: ScrapedContent = {
-        id: doc.id,
-        ...content,
-      };
+      // Firestore genera el ID automáticamente
+      const docRef = this.collectionRef.doc();
 
-      await doc.set(newData);
+      // asigna el id generado a la entidad de dominio
+      entity.id = docRef.id;
 
-      return newData;
+      // convertir Domain → Firestore plain object
+      const dataToSave = ScrapedContentMapper.toFirestore(entity);
+
+      await docRef.set(dataToSave);
+
+      return entity;
 
     } catch (err) {
+      console.error(err);
       throw new InternalServerErrorException('Failed to save document in Firestore');
     }
   }

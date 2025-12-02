@@ -1,15 +1,19 @@
-import { Injectable } from "@nestjs/common";
+import {  Injectable } from "@nestjs/common";
 import ScrapedService from "application/service/scrapperService";
 import { ContentBlock } from "domain/objectValue/ContentBlock";
-import {Browser} from "puppeteer"
-
+import { InjectBrowser } from "nestjs-puppeteer";
+import { Browser } from "puppeteer";
 
 @Injectable()
 export class PuppeteerScrappedService implements ScrapedService {
 
-    constructor(private readonly browser : Browser){}
+    constructor(
+        @InjectBrowser()
+        private readonly browser: Browser
+    ) {}
 
     async scraped(url: string) {
+
         const page = await this.browser.newPage();
 
         await page.goto(url, { waitUntil: "domcontentloaded" });
@@ -80,12 +84,6 @@ export class PuppeteerScrappedService implements ScrapedService {
             date_publish_text: result.date,
             document_type: result.document_type,
             content: contentBlocks
-        }
-
-    
-        
+        };
     }
-
-
-
 }

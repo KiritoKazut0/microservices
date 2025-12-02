@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -43,9 +44,12 @@ export class ScrapedController {
   }
 
 
-  @Get("/")
+  @Get("url")
   @HttpCode(200)
-  async findBySourceUrl( @Query() query: RequestDto) {
+  async findBySourceUrl( @Query("url") query: RequestDto) {
+    if (!query.url) {
+    throw new BadRequestException("Query param 'url' is required");
+  }
     return await this.findBySourceUrlUseCase.run(query.url);
   }
 

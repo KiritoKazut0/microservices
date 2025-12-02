@@ -9,6 +9,11 @@ export class SavedScrapendContentUseCase {
     ) { }
 
     async run(url: string): Promise<ScrapedContent> {
+        const isDocumentScrapedExist = await this.scrapedRepository.findBySourceUrl(url);
+        if (isDocumentScrapedExist){
+            console.log("Ya existe")
+            return isDocumentScrapedExist
+        }
         const scrapedResult = await this.srapedService.scraped(url);
     
         const result = await this.scrapedRepository.save({

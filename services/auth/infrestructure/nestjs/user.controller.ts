@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, Inject, Post } from "@nestjs/common";
 import AccessUseCase from "application/accessUseCase";
 import RegisterUseCase from "application/registerUseCase";
 import { ACCESS_USE_CASE, REGISTER_USE_CASE } from "core/tokens/injection-tokens";
@@ -15,11 +15,13 @@ export class UserController {
     ) { }
 
     @Post('/access')
+    @HttpCode(200)
     async access(@Body() body: AccessDto ) {
         return await this.accessUseCase.run(body.email, body.password);
     }
 
     @Post('/register')
+    @HttpCode(201)
     async create(@Body() body: RegisterDto){
         return await this.registerUseCase.run(body);
     }

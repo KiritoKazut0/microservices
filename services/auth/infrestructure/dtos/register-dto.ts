@@ -1,7 +1,8 @@
-import { IsEmail, IsNotEmpty, IsString, Length} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsValidPassword } from 'infrestructure/validators/password-strength.validator';
 
 export default class RegisterDto {
-    
+
     @IsNotEmpty()
     @IsString()
     @Length(5, 50)
@@ -13,6 +14,9 @@ export default class RegisterDto {
 
     @IsNotEmpty()
     @IsString()
-    @Length(8, 50)
+    @IsValidPassword({
+        message: 'La contraseña es demasiado débil. Utilice una combinación de letras, números y símbolos para reforzarla.'
+    })
+
     password: string;
 }

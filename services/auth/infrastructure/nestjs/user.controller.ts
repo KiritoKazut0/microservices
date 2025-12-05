@@ -3,8 +3,8 @@ import AccessUseCase from "application/accessUseCase";
 import DeleteUseCase from "application/deleteUseCase";
 import RegisterUseCase from "application/registerUseCase";
 import { ACCESS_USE_CASE, DELETE_USE_CASE, REGISTER_USE_CASE } from "core/tokens/injection-tokens";
-import AccessDto from "infrestructure/dtos/access-dto";
-import RegisterDto from "infrestructure/dtos/register-dto";
+import AccessDto from "infrastructure/dtos/access-dto";
+import RegisterDto from "infrastructure/dtos/register-dto";
 
 
 @Controller('auth')

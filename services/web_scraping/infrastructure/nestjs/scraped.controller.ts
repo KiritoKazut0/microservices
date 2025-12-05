@@ -20,7 +20,7 @@ import {
   FIND_BY_ID_USECASE,
 } from "core/injection-token";
 
-import { RequestDto } from "infrestructure/dtos/request-dto";
+import { RequestDto } from "infrastructure/dtos/request-dto";
 
 @Controller("scraped")
 export class ScrapedController {

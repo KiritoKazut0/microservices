@@ -9,8 +9,8 @@ import {
   SCRAPED_REPOSITORY
 } from "core/injection-token";
 
-import { FirestoreScrapingRepository } from "infrestructure/cloud_firestore/firestore-scraping.repository";
-import { PuppeteerScrappedService } from "infrestructure/service/puppeteerScrapedServiceImp";
+import { FirestoreScrapingRepository } from "infrastructure/cloud_firestore/firestore-scraping.repository";
+import { PuppeteerScrappedService } from "infrastructure/service/puppeteerScrapedServiceImp";
 import { FindByIdScrapedContentUseCase } from "application/findByIdScrapedContentUseCase";
 import { FindBySourceUrlUseCase } from "application/findBySourceUrlUseCase";
 import { SavedScrapendContentUseCase } from "application/saveScrapedContentUseCase";

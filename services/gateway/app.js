@@ -11,15 +11,12 @@ const PORT = process.env.PORT || 3005;
 const app = express();
 
 app.use(cors({
-  origin: "*", 
+  origin: "*", // Cambia a tus dominios permitidos en producción
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   preflightContinue: false,
   optionsSuccessStatus: 204
 }));
-
-
-app.options('*', cors());
 
 app.use(express.json());
 
@@ -36,25 +33,13 @@ const serviceLimiter = rateLimit({
 });
 
 
-const proxyOptions = {
-  userResHeaderDecorator(headers, userReq, userRes, proxyReq, proxyRes) {
-    headers['Access-Control-Allow-Origin'] = '*'; // O tu origen específico
-    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
-    headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
-    return headers;
-  },
-  timeout: 5000 
-};
+app.use('/auth/access', loginLimiter, proxy(process.env.MICROSERVICE_AUTH));
+app.use('/auth/register', proxy(process.env.MICROSERVICE_AUTH));
 
-
-
-app.use('/api/v1/auth/access', loginLimiter, proxy(process.env.MICROSERVICE_AUTH, proxyOptions));
-app.use('/api/v1/auth', proxy(process.env.MICROSERVICE_AUTH, proxyOptions));
-
-app.use('/api/v1/web_scraping', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_WEB_SCRAPING, proxyOptions));
-app.use('/api/v1/rag', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_RAG, proxyOptions));
-app.use('/api/v1/bias', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_BIAS, proxyOptions));
-app.use('/api/v1/llm', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_LLM, proxyOptions));
+app.use('/api/v1/web_scraping', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_WEB_SCRAPING));
+app.use('/api/v1/rag', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_RAG));
+app.use('/api/v1/bias', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_BIAS));
+app.use('/api/v1/llm', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_LLM));
 
 // Servidor
 app.listen(PORT, () => {

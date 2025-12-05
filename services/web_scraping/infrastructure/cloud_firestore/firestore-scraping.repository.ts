@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { Firestore, CollectionReference } from 'firebase-admin/firestore';
-import { ScrapedContent } from 'domain/ScrapedContent';
-import { ScrapedRepository } from 'domain/ScrapedRepository';
+import { ScrapedContent } from '../../domain/ScrapedContent'; 
+import { ScrapedRepository } from '../../domain/ScrapedRepository';
 import { ScrapedContentMapper } from './scraped_content.mapper'; 
 
 @Injectable()

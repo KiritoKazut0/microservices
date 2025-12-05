@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import EncryptServiceRepository from "application/service/encryptServiceRepository";
+import EncryptServiceRepository from "../../application/service/encryptServiceRepository";
 import { hash, compare } from "bcrypt";
 
 @Injectable()

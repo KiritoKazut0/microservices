@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
-import { IsValidPassword } from 'infrastructure/validators/password-strength.validator';
+import { IsValidPassword } from '../validators/password-strength.validator';
 
 export default class RegisterDto {
 

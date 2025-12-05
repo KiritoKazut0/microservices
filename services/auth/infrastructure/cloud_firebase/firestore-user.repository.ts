@@ -6,8 +6,8 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { CollectionReference, Firestore } from "firebase-admin/firestore";
-import User from "domain/user";
-import UserRepository from "domain/userRepository";
+import User from "../../domain/user";
+import UserRepository from "../../domain/userRepository";
 
 @Injectable()
 export class FirestoreUserRepository implements UserRepository {

@@ -1,4 +1,4 @@
-import UserRepository from "domain/userRepository";
+import UserRepository from "../domain/userRepository";
 
 export default class DeleteUseCase {
     constructor(

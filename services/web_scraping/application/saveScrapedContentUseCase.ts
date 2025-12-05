@@ -1,6 +1,6 @@
-import { ScrapedRepository } from "domain/ScrapedRepository";
+import { ScrapedRepository } from "../domain/ScrapedRepository";
 import ScrapedService from "./service/scrapperService";
-import { ScrapedContent } from "domain/ScrapedContent";
+import { ScrapedContent } from "../domain/ScrapedContent";
 
 export class SavedScrapendContentUseCase {
     constructor(

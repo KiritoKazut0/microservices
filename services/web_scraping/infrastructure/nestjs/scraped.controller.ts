@@ -10,17 +10,17 @@ import {
   Query,
 } from "@nestjs/common";
 
-import { FindByIdScrapedContentUseCase } from "application/findByIdScrapedContentUseCase";
-import { FindBySourceUrlUseCase } from "application/findBySourceUrlUseCase";
-import { SavedScrapendContentUseCase } from "application/saveScrapedContentUseCase";
+import { FindByIdScrapedContentUseCase } from "../../application/findByIdScrapedContentUseCase";
+import { FindBySourceUrlUseCase } from "../../application/findBySourceUrlUseCase";
+import { SavedScrapendContentUseCase } from "../../application/saveScrapedContentUseCase";
 
 import {
   FIND_BY_SOURCE_ULR_USECASE,
   SAVE_SCRAPED_CONTENT_USECASE,
   FIND_BY_ID_USECASE,
-} from "core/injection-token";
+} from "../../core/injection-token";
 
-import { RequestDto } from "infrastructure/dtos/request-dto";
+import { RequestDto } from "../dtos/request-dto";
 
 @Controller("scraped")
 export class ScrapedController {

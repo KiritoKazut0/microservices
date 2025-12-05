@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { UserController } from "./user.controller";
-import AccessUseCase from "application/accessUseCase";
-import EncryptService from "infrastructure/service/EncryptService";
-import RegisterUseCase from "application/registerUseCase";
-import TokenService from "infrastructure/service/TokenService";
-import { USER_REPOSITORY, ACCESS_USE_CASE, ENCRYPT_SERVICE, REGISTER_USE_CASE, TOKEN_SERVICE, DELETE_USE_CASE } from "core/tokens/injection-tokens";
+import AccessUseCase from "../../application/accessUseCase";
+import EncryptService from "../service/EncryptService";
+import RegisterUseCase from "../../application/registerUseCase";
+import TokenService from "../service/TokenService";
+import { USER_REPOSITORY, ACCESS_USE_CASE, ENCRYPT_SERVICE, REGISTER_USE_CASE, TOKEN_SERVICE, DELETE_USE_CASE } from "../../core/tokens/injection-tokens"; 
 import * as admin from "firebase-admin";
-import { FirestoreUserRepository } from "infrastructure/cloud_firebase/firestore-user.repository";
+import { FirestoreUserRepository } from "../cloud_firebase/firestore-user.repository";
 import { JwtModule } from "@nestjs/jwt";
-import DeleteUseCase from "application/deleteUseCase";
+import DeleteUseCase from "../../application/deleteUseCase";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 
 

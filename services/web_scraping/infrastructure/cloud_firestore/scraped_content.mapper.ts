@@ -1,5 +1,5 @@
-import { ScrapedContent, ScrapedContentProps } from "domain/ScrapedContent";
-import { ContentBlock } from "domain/objectValue/ContentBlock";
+import { ScrapedContent,  ScrapedContentProps } from "../../domain/ScrapedContent";
+import { ContentBlock } from "../../domain/objectValue/ContentBlock";
 
 export class ScrapedContentMapper {
 

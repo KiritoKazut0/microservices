@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, HttpCode, Inject, Param, Post, UnauthorizedException } from "@nestjs/common";
-import AccessUseCase from "application/accessUseCase";
-import DeleteUseCase from "application/deleteUseCase";
-import RegisterUseCase from "application/registerUseCase";
-import { ACCESS_USE_CASE, DELETE_USE_CASE, REGISTER_USE_CASE } from "core/tokens/injection-tokens";
-import AccessDto from "infrastructure/dtos/access-dto";
-import RegisterDto from "infrastructure/dtos/register-dto";
+import AccessUseCase from "../../application/accessUseCase";
+import DeleteUseCase from "../../application/deleteUseCase";
+import RegisterUseCase from "../../application/registerUseCase";
+import { ACCESS_USE_CASE, DELETE_USE_CASE, REGISTER_USE_CASE } from "../../core/tokens/injection-tokens"; 
+import AccessDto from "../dtos/access-dto";
+import RegisterDto from "../dtos/register-dto";
 
 
 @Controller('auth')

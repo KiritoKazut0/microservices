@@ -1,6 +1,6 @@
 import {  Injectable } from "@nestjs/common";
-import ScrapedService from "application/service/scrapperService";
-import { ContentBlock } from "domain/objectValue/ContentBlock";
+import ScrapedService from "../../application/service/scrapperService";
+import { ContentBlock } from "../../domain/objectValue/ContentBlock";
 import { InjectBrowser } from "nestjs-puppeteer";
 import { Browser } from "puppeteer";
 

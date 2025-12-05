@@ -7,13 +7,13 @@ import {
   SCRAPED_SERVICE,
   SAVE_SCRAPED_CONTENT_USECASE,
   SCRAPED_REPOSITORY
-} from "core/injection-token";
+} from "../../core/injection-token";
 
-import { FirestoreScrapingRepository } from "infrastructure/cloud_firestore/firestore-scraping.repository";
-import { PuppeteerScrappedService } from "infrastructure/service/puppeteerScrapedServiceImp";
-import { FindByIdScrapedContentUseCase } from "application/findByIdScrapedContentUseCase";
-import { FindBySourceUrlUseCase } from "application/findBySourceUrlUseCase";
-import { SavedScrapendContentUseCase } from "application/saveScrapedContentUseCase";
+import { FirestoreScrapingRepository } from "../cloud_firestore/firestore-scraping.repository";
+import { PuppeteerScrappedService } from "../service/puppeteerScrapedServiceImp";
+import { FindByIdScrapedContentUseCase } from "../../application/findByIdScrapedContentUseCase";
+import { FindBySourceUrlUseCase } from "../../application/findBySourceUrlUseCase";
+import { SavedScrapendContentUseCase } from "../../application/saveScrapedContentUseCase";
 
 import { PuppeteerModule } from "nestjs-puppeteer";
 import * as admin from "firebase-admin";

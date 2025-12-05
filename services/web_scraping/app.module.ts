@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ScrapedModule } from 'infrastructure/nestjs/scraped.module';
+import { ScrapedModule } from './infrastructure/nestjs/scraped.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({

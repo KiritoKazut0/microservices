@@ -1,4 +1,4 @@
-import User from "domain/user";
+import User from "../domain/user";
 import UserRepository from "../domain/userRepository";
 import EncryptServiceRepository from "./service/encryptServiceRepository";
 import TokenServiceRepository from "./service/tokenServiceRepository";

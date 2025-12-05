@@ -1,5 +1,5 @@
-import { ScrapedContent } from "domain/ScrapedContent";
-import { ScrapedRepository } from "domain/ScrapedRepository";
+import { ScrapedContent } from "../domain/ScrapedContent";
+import { ScrapedRepository } from "../domain/ScrapedRepository";
 
 
 export class FindBySourceUrlUseCase {

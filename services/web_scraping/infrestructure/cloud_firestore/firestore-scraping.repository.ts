@@ -33,7 +33,7 @@ export class FirestoreScrapingRepository implements ScrapedRepository {
     }
   }
 
-  async findBySourceUrl(url: string): Promise<ScrapedContent> {
+  async findBySourceUrl(url: string): Promise<ScrapedContent | null> {
     try {
       const snap = await this.collectionRef
         .where('url', '==', url)
@@ -41,7 +41,7 @@ export class FirestoreScrapingRepository implements ScrapedRepository {
         .get();
 
       if (snap.empty) {
-        throw new NotFoundException(`ScrapedContent with URL '${url}' not found`);
+        return null
       }
 
       return ScrapedContentMapper.toDomain(snap.docs[0].data());

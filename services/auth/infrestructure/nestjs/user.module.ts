@@ -4,30 +4,38 @@ import AccessUseCase from "application/accessUseCase";
 import EncryptService from "infrestructure/service/EncryptService";
 import RegisterUseCase from "application/registerUseCase";
 import TokenService from "infrestructure/service/TokenService";
-import { USER_REPOSITORY, ACCESS_USE_CASE, ENCRYPT_SERVICE, REGISTER_USE_CASE, TOKEN_SERVICE } from "core/tokens/injection-tokens";
+import { USER_REPOSITORY, ACCESS_USE_CASE, ENCRYPT_SERVICE, REGISTER_USE_CASE, TOKEN_SERVICE, DELETE_USE_CASE } from "core/tokens/injection-tokens";
 import * as admin from "firebase-admin";
-import { join } from "node:path";
 import { FirestoreUserRepository } from "infrestructure/cloud_firebase/firestore-user.repository";
 import { JwtModule } from "@nestjs/jwt";
-import { enviroment } from "core/config/enviroment";
+import DeleteUseCase from "application/deleteUseCase";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
-const serviceAccountPath = join(process.cwd(), "firebase-service-account.json");
 
 @Module({
     imports: [
-         JwtModule.register({
-            secret: enviroment.JWT_SECRETE,
-            signOptions: {expiresIn: '1h'}
+        ConfigModule,
+        JwtModule.registerAsync({
+            inject: [ConfigService],
+            useFactory: (config: ConfigService) => ({
+                secret: config.get<string>("JWT_SECRETE"),
+                signOptions: { expiresIn: '1h' }
+            }),
         })
     ],
     controllers: [UserController],
     providers: [
         {
             provide: "FIRESTORE",
-            useFactory: () => {
+            inject: [ConfigService],
+            useFactory: (config: ConfigService) => {
                 if (admin.apps.length === 0) {
                     admin.initializeApp({
-                        credential: admin.credential.cert(serviceAccountPath)
+                        credential: admin.credential.cert({
+                            projectId: config.get<string>('FIREBASE_PROJECT_ID'),
+                            clientEmail: config.get<string>('FIREBASE_CLIENT_EMAIL'),
+                            privateKey: config.get<string>('FIREBASE_PRIVATE_KEY')?.replace(/\\n/g, '\n')
+                        })
                     });
                 }
                 return admin.firestore();
@@ -41,11 +49,11 @@ const serviceAccountPath = join(process.cwd(), "firebase-service-account.json");
             provide: TOKEN_SERVICE,
             useClass: TokenService
         },
-         {
+        {
             provide: USER_REPOSITORY,
-            useFactory: (firestore) => 
-                new FirestoreUserRepository(firestore, enviroment.COLLECTION_NAME),
-            inject: ["FIRESTORE"]
+            useFactory: (firestore, config: ConfigService) =>
+                new FirestoreUserRepository(firestore, config.get<string>("COLLECTION_NAME") ?? "user"),
+            inject: ["FIRESTORE", ConfigService]
         },
         {
             provide: ACCESS_USE_CASE,
@@ -66,6 +74,12 @@ const serviceAccountPath = join(process.cwd(), "firebase-service-account.json");
             ) =>
                 new RegisterUseCase(userRepository, encryptService, tokenService),
             inject: [USER_REPOSITORY, ENCRYPT_SERVICE, TOKEN_SERVICE]
+        }, {
+            provide: DELETE_USE_CASE,
+            useFactory: (
+                userRepository
+            ) => new DeleteUseCase(userRepository),
+            inject: [USER_REPOSITORY]
         }
     ]
 })

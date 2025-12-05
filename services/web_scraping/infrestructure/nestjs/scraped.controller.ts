@@ -44,7 +44,7 @@ export class ScrapedController {
   }
 
 
-  @Get("url")
+  @Get("/url")
   @HttpCode(200)
   async findBySourceUrl( @Query("url") query: RequestDto) {
     if (!query.url) {

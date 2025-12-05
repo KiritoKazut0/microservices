@@ -24,7 +24,7 @@ const loginLimiter = rateLimit({
 
 const serviceLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 5, // como pediste
+  max: 5,
   message: { msg: "Demasiadas solicitudes. Intenta de nuevo en un minuto." }
 });
 

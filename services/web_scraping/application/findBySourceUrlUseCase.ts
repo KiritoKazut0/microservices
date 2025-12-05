@@ -6,7 +6,7 @@ export class FindBySourceUrlUseCase {
 
     constructor(private readonly scrapedRepository: ScrapedRepository){}
 
-    async run (url: string): Promise<ScrapedContent>{
+    async run (url: string): Promise<ScrapedContent | null>{
         const result = await this.scrapedRepository.findBySourceUrl(url);
         return result;
     }

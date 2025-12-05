@@ -17,16 +17,15 @@ import { SavedScrapendContentUseCase } from "application/saveScrapedContentUseCa
 
 import { PuppeteerModule } from "nestjs-puppeteer";
 import * as admin from "firebase-admin";
-import { join } from "node:path";
 
-const serviceAccountPath = join(process.cwd(), "firebase-service-account.json");
+import { ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
     PuppeteerModule.forRoot({
-       headless: 'new',
-      executablePath: chromium.path, 
-      args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+      headless: 'new',
+      executablePath: chromium.path,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
   ],
 
@@ -36,10 +35,15 @@ const serviceAccountPath = join(process.cwd(), "firebase-service-account.json");
     // FIRESTORE
     {
       provide: "FIRESTORE",
-      useFactory: () => {
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
         if (admin.apps.length === 0) {
           admin.initializeApp({
-            credential: admin.credential.cert(serviceAccountPath)
+            credential: admin.credential.cert({
+              projectId: config.get<string>('FIREBASE_PROJECT_ID'),
+              clientEmail: config.get<string>('FIREBASE_CLIENT_EMAIL'),
+              privateKey: config.get<string>('FIREBASE_PRIVATE_KEY')?.replace(/\\n/g, '\n')
+            })
           });
         }
         return admin.firestore();
@@ -80,4 +84,4 @@ const serviceAccountPath = join(process.cwd(), "firebase-service-account.json");
     }
   ]
 })
-export class ScrapedModule {}
+export class ScrapedModule { }

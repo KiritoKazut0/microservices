@@ -13,7 +13,8 @@ export class PuppeteerScrappedService implements ScrapedService {
     ) {}
 
     async scraped(url: string) {
-
+        try {
+            
         const page = await this.browser.newPage();
 
         await page.goto(url, { waitUntil: "domcontentloaded" });
@@ -85,5 +86,10 @@ export class PuppeteerScrappedService implements ScrapedService {
             document_type: result.document_type,
             content: contentBlocks
         };
+        } catch (error) {
+            console.log(error)
+            throw(error)
+            
+        }
     }
 }

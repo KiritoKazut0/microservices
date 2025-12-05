@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
-  UnauthorizedException
 } from "@nestjs/common";
 import { CollectionReference, Firestore } from "firebase-admin/firestore";
 import User from "domain/user";
@@ -60,6 +59,32 @@ export class FirestoreUserRepository implements UserRepository {
       const user = await this.findByEmail(email);
       return user;
   }
+
+
+async deleteAccount(id: string): Promise<boolean> {
+  try {
+    const docRef = this.collectionRef.doc(id);
+    const docSnap = await docRef.get();
+
+  
+    if (!docSnap.exists) {
+      throw new NotFoundException(`User with id '${id}' does not exist.`);
+    }
+
+    await docRef.delete();
+
+    return true;
+  } catch (error) {
+
+    if (error instanceof NotFoundException) {
+      throw error;
+    }
+
+    throw new InternalServerErrorException(
+      "Error occurred while deleting the user from Firestore."
+    );
+  }
+}
 
 
   private async findByEmail(email: string): Promise<User | null> {

@@ -32,8 +32,8 @@ const serviceLimiter = rateLimit({
 });
 
 
-app.use('/api/v1/auth/access', loginLimiter, proxy(process.env.MICROSERVICE_AUTH));
-app.use('/api/v1/auth', proxy(process.env.MICROSERVICE_AUTH));
+app.use('/auth/access', loginLimiter, proxy(process.env.MICROSERVICE_AUTH));
+app.use('/auth/register', proxy(process.env.MICROSERVICE_AUTH));
 app.use('/api/v1/web_scraping', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_WEB_SCRAPING));
 app.use('/api/v1/rag', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_RAG));
 app.use('/api/v1/bias', authMiddleware, serviceLimiter, proxy(process.env.MICROSERVICE_BIAS));

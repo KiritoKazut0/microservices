@@ -1,0 +1,57 @@
+_format_version: "3.0"
+
+services:
+  - name: auth
+    url: https://microservices-gamma.vercel.app
+
+    routes:
+      - name: login-route
+        paths:
+          - /auth/access
+        strip_path: false
+
+      - name: auth-routes
+        paths:
+          - /auth
+        strip_path: false
+
+  - name: web_scraping
+    url: http://host.docker.internal:3001
+    routes:
+      - name: scraping-routes
+        paths:
+          - /scraped
+        strip_path: false
+  
+  - name: rag
+    url: http://host.docker.internal:5001
+    routes:
+      - name: rag_routes
+        paths:
+          - /rag
+        strip_path: false
+
+  - name: llm
+    url: http://host.docker.internal:5001
+    routes:
+      - name: llm_routes
+        paths:
+          - /llm
+        strip_path: false
+
+
+  - name: bias
+    url: http://host.docker.internal:5002
+    routes:
+      - name: bias_routes
+        paths:
+          - /bias
+        strip_path: false
+      
+
+plugins:
+  - name: rate-limiting
+    route: login-route
+    config:
+      minute: 3 # 3 intentos por minuto 
+      policy: local

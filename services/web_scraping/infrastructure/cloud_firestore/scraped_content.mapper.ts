@@ -1,4 +1,4 @@
-import { ScrapedContent,  ScrapedContentProps } from "../../domain/ScrapedContent";
+import { ScrapedContent, ScrapedContentProps } from "../../domain/ScrapedContent";
 import { ContentBlock } from "../../domain/objectValue/ContentBlock";
 
 export class ScrapedContentMapper {
@@ -26,9 +26,15 @@ export class ScrapedContentMapper {
       title: data.title,
       subtitle: data.subtitle,
       date_publish_text: data.date_publish_text,
-      date_extract: data.date_extract instanceof Date 
-        ? data.date_extract 
-        : new Date(data.date_extract),
+      date_extract:
+        data.date_extract?.toDate
+          ? data.date_extract.toDate()
+          : data.date_extract instanceof Date
+            ? data.date_extract
+            : data.date_extract
+              ? new Date(data.date_extract)
+              : null,
+
       document_type: data.document_type,
       mainContent: data.mainContent.map(
         (c: any) => new ContentBlock(c.type, c.text)

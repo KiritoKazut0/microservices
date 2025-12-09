@@ -44,7 +44,9 @@ export class FirestoreScrapingRepository implements ScrapedRepository {
         return null
       }
 
-      return ScrapedContentMapper.toDomain(snap.docs[0].data());
+    
+     const data =  ScrapedContentMapper.toDomain(snap.docs[0].data());
+      return data
 
     } catch (err) {
       if (err instanceof NotFoundException) throw err;

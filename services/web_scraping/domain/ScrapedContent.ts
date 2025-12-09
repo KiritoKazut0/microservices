@@ -26,6 +26,7 @@ export class ScrapedContent {
         this.url = props.url;
         this.title = props.title;
         this.subtitle = props.subtitle;
+        this.date_publish_text = props.date_publish_text,
         this.date_extract = props.date_extract;
         this.document_type = props.document_type;
         this.mainContent = props.mainContent;

@@ -130,8 +130,9 @@ function consumeMessages() {
 
             console.log(`   [3/3] LLM...`);
             const llmData = await axios.post(`${SERVICES.LLM}/analysis/process`, biasData.data)
+            console.dir(llmData.data)
             const message = JSON.stringify(llmData.data);
-            
+
             await sendNotification(fcm_token, "Análisis Completado", message, "success");
             channel?.ack(msg);
 
@@ -166,6 +167,7 @@ function consumeMessages() {
 
             const llmResult = await axios.post(`${SERVICES.LLM}/analysis/process`, biasData.data)
             const message = JSON.stringify(llmResult.data);
+              console.dir(llmResult.data)
             await sendNotification(fcm_token, "Análisis Completado", message, "success");
 
              channel?.ack(msg);

@@ -4,7 +4,7 @@ import cors from 'cors';
 import amqp, { Channel, ConsumeMessage } from 'amqplib';
 import axios from 'axios';
 import admin from 'firebase-admin';
-import { v4 as uuidv4 } from "uuid"
+import * as uuid from "uuid";
 import ResponseScraping from './src/interface/ResponseScraping';
 
 
@@ -200,7 +200,7 @@ app.post('/analysis/notice', async (req: Request, res: Response): Promise<any> =
         error: "Is requiered field url or text_user"
     });
 
-    const id_analisis = `job_${uuidv4()}`;
+    const id_analisis = `job_${uuid.v4()}`;
     if (channel) {
         try {
             channel.sendToQueue(QUEUE_NOTICE, Buffer.from(JSON.stringify({ id_analisis, url, fcm_token, text_user })));
@@ -221,7 +221,7 @@ app.post('/analysis/comments', async (req: Request, res: Response): Promise<any>
         error: "Is requiered field text_user"
     });
 
-    const id_analisis = `job_${uuidv4()}`;
+    const id_analisis = `job_${uuid.v4()}`;
     if (channel) {
         try {
             channel.sendToQueue(QUEUE_COMMENTS, Buffer.from(JSON.stringify({ id_analisis, fcm_token, text_user })));
